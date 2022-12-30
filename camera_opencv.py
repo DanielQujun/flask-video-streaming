@@ -1,7 +1,10 @@
 import os
 import cv2
 from base_camera import BaseCamera
+from utils.utils_rotate import RotateClockWise180
+from distutils.util import strtobool
 
+NEED_REVERSE = strtobool(str(os.environ.get('REVERSE', "False")))
 
 class Camera(BaseCamera):
     video_source = 0
@@ -24,6 +27,8 @@ class Camera(BaseCamera):
         while True:
             # read current frame
             _, img = camera.read()
-
+            if NEED_REVERSE:
+                print("reverse img!")
+                img = RotateClockWise180(img)
             # encode as a jpeg image and return it
             yield cv2.imencode('.jpg', img)[1].tobytes()

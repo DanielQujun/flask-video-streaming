@@ -1,0 +1,12 @@
+FROM harbor.tiduyun.com/qujun/miniforge3:latest
+
+ADD requirements_qujun.txt /tmp/requirements.txt
+
+RUN pip install -r /tmp/requirements.txt
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y libgl1 libglib2.0-0
+
+ADD torch_patch/activation.py /opt/conda/lib/python3.7/site-packages/torch/nn/modules/activation.py
+ADD torch_patch/upsampling.py /opt/conda/lib/python3.7/site-packages/torch/nn/modules/upsampling.py
